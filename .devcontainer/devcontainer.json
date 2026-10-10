@@ -1,0 +1,11 @@
+{
+  "name": "Wavens App",
+
+  "dockerComposeFile": "../docker-compose.yml",
+
+  "service": "app",
+
+  "workspaceFolder": "/app",
+
+  "shutdownAction": "none"
+}
