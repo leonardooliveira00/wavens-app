@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Auth } from '../../services/auth';
+import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 })
 export class Login {
 
-  private readonly auth = inject(Auth);
+  private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   loginModel = signal({
     email: '',

@@ -2,6 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { firstValueFrom } from 'rxjs';
+import { Me } from '../models/auth/Me';
 
 interface LoginData {
     email: string,
@@ -9,12 +10,14 @@ interface LoginData {
 }
 
 @Service()
-export class Auth {
+export class AuthService {
     private http = inject(HttpClient)
+
+    url: string = `${environment.apiUrl}/auth`
 
     login(data: LoginData) {
         return firstValueFrom(this.http.post(
-            `${environment.apiUrl}/auth/login`,
+            `${this.url}/login`,
             data,
             { credentials: 'include' })
         )
@@ -22,14 +25,14 @@ export class Auth {
 
     logout() {
         return firstValueFrom(this.http.post(
-            `${environment.apiUrl}/auth/logout`,
+            `${this.url}/logout`,
             null,
             { credentials: 'include' }
         ))
     }
 
-    authenticationResource = httpResource(() => ({
-        url: `${environment.apiUrl}/auth/me`,
+    authenticationResource = httpResource<Me | null>(() => ({
+        url: `${this.url}/me`,
         credentials: 'include'
     }))
 }

@@ -1,12 +1,13 @@
-import { inject } from '@angular/core';
+import { inject, WritableResource } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RedirectCommand, Router, RouterStateSnapshot } from '@angular/router';
-import { Auth } from '../services/auth';
+import { AuthService } from '../services/auth.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Me } from '../models/auth/Me';
 
 export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const authService = inject(Auth);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
   const resource = authService.authenticationResource;
@@ -39,8 +40,6 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
     )
   }
 
-  if (resource.status() === 'resolved' && resource.hasValue()) return true;
-
   const error = resource.error();
 
   if (error instanceof HttpErrorResponse && error.status === 401) {
@@ -50,6 +49,21 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
         state: { returnUrl: state.url }
       }
     )
+  }
+
+  if (resource.status() === 'resolved') {
+    const value = resource.value();
+
+    if (value) return true;
+
+    if (value === null || value === undefined) {
+      return new RedirectCommand(
+        router.createUrlTree(['/auth/login']),
+        {
+          state: { returnUrl: state.url }
+        }
+      )
+    }
   }
 
   return false;

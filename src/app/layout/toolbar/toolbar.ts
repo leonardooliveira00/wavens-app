@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Auth } from '../../services/auth';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 
 export class Toolbar {
-  private readonly authService = inject(Auth);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   isDarkMode = signal<boolean>(false)
@@ -31,6 +31,8 @@ export class Toolbar {
 
   async logoutUser() {
     await this.authService.logout();
+
+    this.authService.authenticationResource.update(() => null);
 
     await this.router.navigateByUrl('/auth/login');
   }
