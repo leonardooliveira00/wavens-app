@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { MainLayout } from './layout/main-layout/main-layout';
+import { MainLayout } from './shared/layout/main-layout/main-layout';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Staff } from './pages/staff/staff';
 import { NotFound } from './pages/not-found/not-found';
-import { authGuard } from './guards/auth-guard';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
     {

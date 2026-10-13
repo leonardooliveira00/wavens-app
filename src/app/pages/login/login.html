@@ -1,5 +1,5 @@
 <div class="flex min-h-dvh items-center justify-center">
-    <mat-card class="w-full max-w-md">
+    <mat-card class="w-full max-w-lg">
         <mat-card-header class="mb-4">
             <mat-card-title>Wavens</mat-card-title>
         </mat-card-header>
@@ -12,7 +12,7 @@
                         <mat-label>Email</mat-label>
                         <input matInput type="email" [formField]="loginForm.email">
 
-                        @for (error of loginForm.email().errors(); track error) {
+                        @for (error of loginForm.email().errors(); track error.kind) {
                         <mat-error>{{error.message}}</mat-error>
                         }
                     </mat-form-field>
@@ -29,7 +29,7 @@
                             <mat-icon>{{isHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
 
-                        @for (error of loginForm.password().errors(); track error) {
+                        @for (error of loginForm.password().errors(); track error.kind) {
                         <mat-error>{{error.message}}</mat-error>
                         }
                     </mat-form-field>
@@ -46,7 +46,7 @@
                 </p>
 
                 <p class="flex justify-center">
-                    <button matButton="filled" type="submit" [disabled]="loginForm().submitting()">
+                    <button matButton="filled" type="submit" [disabled]="loginForm().submitting()" class="w-full">
                         @if(loginForm().submitting()){
                         <mat-spinner diameter="20"></mat-spinner>
                         } @else {

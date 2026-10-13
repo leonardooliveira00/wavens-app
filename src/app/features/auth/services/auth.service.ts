@@ -1,8 +1,8 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../../../environments/environment.development';
 import { firstValueFrom } from 'rxjs';
-import { Me } from '../models/auth/Me';
+import { Me } from '../models/Me';
 
 interface LoginData {
     email: string,

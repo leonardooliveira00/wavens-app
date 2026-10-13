@@ -7,12 +7,11 @@
 </div>
 
 <div>
-    <p>Carregando: {{ staffService.staffResource.isLoading() }}</p>
-    <p>{{ staffList() | json }}</p>
-    <table mat-table [dataSource]="dataSource" class="mat-shadow-2">
+    <p>Carregando: {{ staffService.staffListResource.isLoading() }}</p>
+    <table mat-table [dataSource]="listItems()" class="mat-shadow-2">
 
         <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>Id</th>
+            <th mat-header-cell *matHeaderCellDef>UUID</th>
             <td mat-cell *matCellDef="let element">{{element.id}}</td>
         </ng-container>
 
@@ -48,4 +47,19 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    @if(staffService.isLoadingMore()){
+    <div class="flex items-center justify-center">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    }
+
+    @if(hasMore()){
+    <div class="flex items-center justify-center">
+        <button matFab extended (click)="staffService.loadNextPage()">
+            <mat-icon>sync</mat-icon>
+            Carregar mais
+        </button>
+    </div>
+    }
 </div>

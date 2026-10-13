@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatNavList, MatListItem, MatListItemTitle, MatListItemIcon } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavigationItem {
   label: string,
@@ -10,7 +11,7 @@ interface NavigationItem {
 }
 
 @Component({
-  imports: [MatNavList, MatListItem, MatIcon, MatListItemTitle, MatListItemIcon, MatButtonModule],
+  imports: [MatNavList, MatListItem, MatIcon, MatListItemTitle, MatListItemIcon, MatButtonModule, RouterLink, RouterLinkActive],
   selector: 'app-navbar',
   styleUrl: './navbar.css',
   templateUrl: './navbar.html',

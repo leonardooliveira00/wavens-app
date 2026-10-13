@@ -1,12 +1,13 @@
 <div class="flex flex-1 flex-col h-full p-4 text-white">
     <div class="branding flex items-center justify-between border-b pb-2">
-        <h2>NEWSFLOW</h2>
+        <h2>Wavens</h2>
     </div>
 
     <div class="flex-1 mt-4">
         <mat-nav-list role="navigation">
-            @for (item of navigationItems; track $index) {
-            <mat-list-item>
+            @for (item of navigationItems; track item.route) {
+            <mat-list-item [routerLink]="item.route" routerLinkActive [routerLinkActiveOptions]="{exact: true}"
+                #rla="routerLinkActive" [activated]="rla.isActive">
                 <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
                 <span matListItemTitle>{{ item.label }}</span>
             </mat-list-item>

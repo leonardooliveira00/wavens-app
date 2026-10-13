@@ -1,10 +1,9 @@
-import { inject, WritableResource } from '@angular/core';
+import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RedirectCommand, Router, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Me } from '../models/auth/Me';
 
 export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const authService = inject(AuthService);
@@ -12,7 +11,7 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
 
   const resource = authService.authenticationResource;
 
-  var status = toObservable(resource.status);
+  const $status = toObservable(resource.status);
 
   const isFinished = (status: string) =>
     status === 'resolved' || status === 'error';
@@ -24,19 +23,19 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
 
   if (currentStatus === 'idle' || isLoading(currentStatus)) {
     await firstValueFrom(
-      status.pipe(filter(isFinished), take(1))
+      $status.pipe(filter(isFinished), take(1))
     )
   } else {
     const reloadStarted = resource.reload();
 
     if (reloadStarted) {
       await firstValueFrom(
-        status.pipe(filter(isLoading), take(1))
+        $status.pipe(filter(isLoading), take(1))
       )
     }
 
     await firstValueFrom(
-      status.pipe(filter(isFinished), take(1))
+      $status.pipe(filter(isFinished), take(1))
     )
   }
 

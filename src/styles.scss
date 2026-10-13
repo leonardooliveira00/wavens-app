@@ -47,13 +47,20 @@ html.dark {
 :root {
     @include mat.list-overrides((list-item-label-text-color: var(--mat-sys-on-primary),
             list-item-leading-icon-color: var(--mat-sys-on-primary),
-            list-item-hover-leading-icon-color: var(--mat-sys-on-primary),
             list-item-hover-label-text-color: var(--mat-sys-on-primary),
-        ))
+            list-item-hover-leading-icon-color: var(--mat-sys-on-primary),
+            list-item-focus-label-text-color: var(--mat-sys-on-primary),
+            active-indicator-color: #00485b,
+            list-item-focus-state-layer-opacity: 0));
 }
 
 :root {
     @include mat.toolbar-overrides((container-background-color: var(--mat-sys-surface)))
+}
+
+:root {
+    @include mat.card-overrides((elevated-container-shape: (--mat-sys-corner-medium),
+        ));
 }
 
 .form-error {
