@@ -5,9 +5,13 @@ import { MatTableModule } from '@angular/material/table';
 import { StaffService } from '../../features/staff/services/staff.service';
 import { StaffListItem } from '../../features/staff/models/staff.list.item';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  imports: [MatButtonModule, MatIcon, MatTableModule, MatProgressBar],
+  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule],
   providers: [StaffService],
   selector: 'app-staff',
   styleUrl: './staff.css',
