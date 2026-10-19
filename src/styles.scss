@@ -5,7 +5,7 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 @use 'tailwindcss';
-@use './theme-colors' as theme-colors;
+@use './app/theme-colors' as theme-colors;
 
 @include mat.core();
 
@@ -36,6 +36,10 @@ html.dark {
             list-item-hover-label-text-color: var(--mat-sys-on-primary)));
 }
 
+.form-error {
+    color: var(--mat-sys-error)
+}
+
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {
     @include mat.sidenav-overrides((container-width: 256px,
@@ -59,12 +63,56 @@ html.dark {
 }
 
 :root {
-    @include mat.card-overrides((elevated-container-shape: (--mat-sys-corner-medium),
+    @include mat.card-overrides((elevated-container-color: var(--mat-sys-surface-container),
+            elevated-container-elevation: 0px,
         ));
 }
 
-.form-error {
-    color: var(--mat-sys-error)
+.mat-mdc-header-cell {
+    background: var(--mat-sys-primary) !important;
+    color: var(--mat-sys-on-primary);
+}
+
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+}
+
+.mat-mdc-row:hover {
+    background-color: var(--mat-sys-surface-container-highest);
+}
+
+.view-action:hover {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.edit-action:hover {
+    background-color: #e7fff3;
+    color: #4e9f84;
+}
+
+.deactivate-action:hover {
+    background-color: #ffdad6;
+    color: #ff5449;
+}
+
+.status-active {
+    background-color: var(--mat-sys-tertiary-container);
+    color: var(--mat-sys-on-tertiary-container);
+}
+
+.status-inactive {
+    background-color: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+}
+
+.mat-mdc-header-cell.text-center {
+    text-align: center;
+}
+
+.mdc-data-table__cell.text-center {
+    text-align: center;
 }
 
 body {

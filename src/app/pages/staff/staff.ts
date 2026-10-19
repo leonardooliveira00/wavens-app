@@ -31,5 +31,5 @@ export class Staff {
     }
   })
 
-  displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'actions']
+  displayedColumns: string[] = ['id', 'fullName', 'email', 'status', 'actions']
 }
