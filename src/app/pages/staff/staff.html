@@ -12,7 +12,7 @@
                 <mat-form-field subscriptSizing="dynamic" class="w-full">
                     <mat-icon matIconPrefix>search</mat-icon>
                     <mat-label>Pesquisar colaboradores</mat-label>
-                    <input matInput type="search">
+                    <input matInput type="search" #searchInput (input)="staffService.searchStaff(searchInput.value)">
                 </mat-form-field>
 
 
@@ -69,11 +69,20 @@
                     </td>
                 </ng-container>
 
+                <tr class="mat-row" *matNoDataRow [class.hidden]="hideEmptyState()">
+                    <td class="mat-cell py-10 text-center text-gray-500" [attr.colspan]="displayedColumns.length">
+                        <div class="flex items-center justify-center mt-8">
+                            <mat-icon matIconPrefix>search_off</mat-icon>
+                            <p>Nenhum resultado encontrado</p>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            @if(staffService.isLoadingMore()){
+            @if(isLoadingSearch() || staffService.isLoadingMore()){
             <div class="flex items-center">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
@@ -83,7 +92,7 @@
 
         <mat-card-actions>
 
-            @if(hasMore()){
+            @if(hasMore() && !isSearching()){
             <div class="flex items-center justify-center w-full">
                 <button matFab extended (click)="staffService.loadNextPage()">
                     <mat-icon>sync</mat-icon>

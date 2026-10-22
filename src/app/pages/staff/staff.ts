@@ -9,9 +9,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
-  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule],
   providers: [StaffService],
   selector: 'app-staff',
   styleUrl: './staff.css',
@@ -20,14 +21,28 @@ import { MatInputModule } from '@angular/material/input';
 export class Staff {
   staffService = inject(StaffService)
 
-  staffSource = computed<StaffListItem[]>(() => this.staffService.staffListResource.value()?.items ?? [])
+  source = computed<{ items: StaffListItem[]; search: string }>(() => ({
+    items: this.staffService.staffListResource.value()?.items ?? [],
+    search: this.staffService.search()
+  }))
+
+  isLoadingSearch = computed<boolean>(() => this.staffService.staffListResource.isLoading() &&
+    !this.staffService.isLoadingMore())
+
+  isSearching = computed<boolean>(() => this.staffService.search() !== this.staffService.debouncedSearch.value())
+
+  hideEmptyState = computed<boolean>(() => this.isSearching() || this.staffService.staffListResource.isLoading())
 
   hasMore = computed<boolean>(() => this.staffService.staffListResource.value()?.hasMore ?? false)
 
-  listItems = linkedSignal<StaffListItem[], StaffListItem[]>({
-    source: this.staffSource,
-    computation: (newItems, previousItems) => {
-      return [...previousItems?.value ?? [], ...newItems]
+  listItems = linkedSignal<{ items: StaffListItem[]; search: string }, StaffListItem[]>({
+    source: this.source,
+    computation: (current, previous) => {
+      if (previous && current.search !== previous.source.search) {
+        return []
+      }
+
+      return [...(previous?.value ?? []), ...current.items]
     }
   })
 

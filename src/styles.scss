@@ -73,9 +73,16 @@ html.dark {
     color: var(--mat-sys-on-primary);
 }
 
+.mat-mdc-header-cell.text-center {
+    text-align: center;
+}
+
+.mdc-data-table__cell.text-center {
+    text-align: center;
+}
+
 .mat-mdc-row .mat-mdc-cell {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
+    border-bottom: 1px solid var(--mat-sys-surface-container-highest);
 }
 
 .mat-mdc-row:hover {
@@ -105,14 +112,6 @@ html.dark {
 .status-inactive {
     background-color: var(--mat-sys-error-container);
     color: var(--mat-sys-on-error-container);
-}
-
-.mat-mdc-header-cell.text-center {
-    text-align: center;
-}
-
-.mdc-data-table__cell.text-center {
-    text-align: center;
 }
 
 body {

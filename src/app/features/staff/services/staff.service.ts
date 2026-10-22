@@ -1,5 +1,5 @@
 import { HttpParams, httpResource } from '@angular/common/http';
-import { Service, signal } from '@angular/core';
+import { debounced, Service, signal } from '@angular/core';
 import { PagedResult } from '../../../shared/paged.result';
 import { StaffListItem } from '../models/staff.list.item';
 import { environment } from '../../../../environments/environment.development';
@@ -8,22 +8,27 @@ import { filter, firstValueFrom, take } from 'rxjs';
 
 @Service()
 export class StaffService {
-    cursor = signal<string | null>(null);
+    cursor = signal<string | null>(null)
 
-    isLoadingMore = signal<boolean>(false);
+    search = signal<string>('')
+    debouncedSearch = debounced(this.search, 300)
+
+    isLoadingMore = signal<boolean>(false)
 
     url: string = `${environment.apiUrl}/staffs`
 
     baseParams = new HttpParams().set('pagesize', 2)
 
     staffListResource = httpResource<PagedResult<StaffListItem>>(() => {
-        const currentCursor = this.cursor();
+        const currentCursor = this.cursor()
+
+        const currentSearch = this.debouncedSearch.value()
 
         let params = this.baseParams;
 
-        if (currentCursor !== null) {
-            params = params.set('cursor', currentCursor)
-        }
+        if (currentCursor !== null) params = params.set('cursor', currentCursor)
+
+        if (currentSearch.trim() !== '') params = params.set('search', currentSearch)
 
         return {
             url: this.url,
@@ -65,5 +70,11 @@ export class StaffService {
         } finally {
             this.isLoadingMore.set(false)
         }
+    }
+
+    searchStaff = (text: string) => {
+        this.search.set(text)
+
+        this.cursor.set(null)
     }
 }
