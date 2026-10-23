@@ -3,8 +3,8 @@ import { debounced, Service, signal } from '@angular/core';
 import { PagedResult } from '../../../shared/paged.result';
 import { StaffListItem } from '../models/staff.list.item';
 import { environment } from '../../../../environments/environment.development';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, firstValueFrom, take } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { filter, firstValueFrom, map, take } from 'rxjs';
 
 @Service()
 export class StaffService {
@@ -38,6 +38,13 @@ export class StaffService {
     })
 
     status$ = toObservable(this.staffListResource.status)
+
+    hasCompletedInitialLoad = toSignal(
+        this.status$.pipe(
+            filter(status => status === 'resolved' || status === 'error'), take(1), map(() => true)
+        ),
+        { initialValue: false }
+    )
 
     loadNextPage = async () => {
         try {
