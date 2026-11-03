@@ -11,9 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { StaffTableColumn } from '../../features/staff/models/staff.table.column';
+import { StaffSortBy } from '../../features/staff/models/staff.sort.by';
+import { StaffSortOrder } from '../../features/staff/models/staff.sort.order';
+import { StaffSortStatus } from '../../features/staff/models/staff.sort.status';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
-  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule, MatSelectModule, MatDivider],
   providers: [StaffService],
   selector: 'app-staff',
   styleUrl: './staff.css',
@@ -22,15 +27,25 @@ import { StaffTableColumn } from '../../features/staff/models/staff.table.column
 export class Staff {
   staffService = inject(StaffService)
 
-  source = computed<{ items: StaffListItem[]; search: string }>(() => ({
+  source = computed<{ items: StaffListItem[]; search: string, sortBy: string, sortOrder: string, status: string }>(() => ({
     items: this.staffService.staffListResource.value()?.items ?? [],
+    sortBy: this.staffService.selectedSortBy(),
+    sortOrder: this.staffService.selectedSortOrder(),
+    status: this.staffService.selectedStatus(),
     search: this.staffService.debouncedSearch.value()
   }))
 
-  listItems = linkedSignal<{ items: StaffListItem[]; search: string }, StaffListItem[]>({
+  listItems = linkedSignal<{ items: StaffListItem[]; search: string, sortBy: string, sortOrder: string, status: string }, StaffListItem[]>({
     source: this.source,
     computation: (current, previous) => {
-      if (previous && current.search !== previous.source.search) {
+      if (
+        previous && (
+          current.search !== previous.source.search ||
+          current.sortBy !== previous.source.sortBy ||
+          current.sortOrder !== previous.source.sortOrder ||
+          current.status !== previous.source.status
+        )
+      ) {
         return current.items
       }
 
@@ -59,10 +74,59 @@ export class Staff {
 
   hasMore = computed<boolean>(() => this.staffService.staffListResource.value()?.hasMore ?? false)
 
+  staffSortBy: StaffSortBy[] = [
+    { value: 'CreatedAt', viewValue: 'Data de criação', icon: 'calendar_month' },
+    { value: 'FirstName', viewValue: 'Nome', icon: 'sort_by_alpha' },
+    { value: 'LastName', viewValue: 'Sobrenome', icon: 'sort_by_alpha' }
+  ]
+
+  staffSortOrder: StaffSortOrder[] = [
+    { value: 'DESC', viewValue: 'Mais recente', icon: 'arrow_downward' },
+    { value: 'ASC', viewValue: 'Mais antigo', icon: 'arrow_upward' }
+  ]
+
+  staffSortStatus: StaffSortStatus[] = [
+    { value: 'Active', viewValue: "Ativo" },
+    { value: 'Inactive', viewValue: "Inativo" }
+  ]
+
+  sortOrderOptions = computed<StaffSortOrder[]>(() => {
+    switch (this.staffService.selectedSortBy()) {
+      case 'FirstName':
+      case 'LastName':
+        return [
+          { value: 'ASC', viewValue: 'Crescente', icon: 'arrow_upward' },
+          { value: 'DESC', viewValue: 'Decrescente', icon: 'arrow_downward' },
+        ]
+
+      case 'CreatedAt':
+        return [
+          { value: 'DESC', viewValue: 'Mais recente', icon: 'arrow_downward' },
+          { value: 'ASC', viewValue: 'Mais antiga', icon: 'arrow_upward' }
+        ]
+
+      default:
+        return []
+    }
+  })
+
+  sortByIcon = computed(() =>
+    this.staffSortBy.find(
+      option => option.value === this.staffService.selectedSortBy()
+    )?.icon ?? 'sort'
+  )
+
+  sortOrderIcon = computed(() =>
+    this.staffSortOrder.find(
+      option => option.value === this.staffService.selectedSortOrder()
+    )?.icon ?? 'sort'
+  )
+
   columns: StaffTableColumn[] = [
     { key: 'id', label: 'UUID', skeletonWidth: 'w-32', skeletonClass: '', headerClass: '', cellClass: '' },
     { key: 'fullName', label: 'Nome', skeletonWidth: 'w-40', skeletonClass: '', headerClass: '', cellClass: '' },
     { key: 'email', label: 'Email', skeletonWidth: 'w-48', skeletonClass: '', headerClass: '', cellClass: '' },
+    { key: 'roles', label: 'Cargo', skeletonWidth: 'w-20', skeletonClass: '', headerClass: '', cellClass: '' },
     { key: 'status', label: 'Status', skeletonWidth: 'w-20', skeletonClass: 'mx-auto', headerClass: 'text-center', cellClass: 'text-center' },
     { key: 'actions', label: 'Ações', skeletonWidth: 'w-24', skeletonClass: 'mx-auto', headerClass: 'text-center', cellClass: 'text-center' }
   ]
@@ -71,12 +135,14 @@ export class Staff {
     this.columns.map(column => column.key))
 
   skeletonRows: StaffListItem[] = Array.from(
-    { length: 5 },
+    { length: 6 },
     () => ({
       id: '',
       fullName: '',
       email: '',
-      status: ''
+      role: '',
+      status: '',
+      actions: ''
     })
   )
 

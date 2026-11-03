@@ -5,6 +5,9 @@ import { StaffListItem } from '../models/staff.list.item';
 import { environment } from '../../../../environments/environment.development';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom, map, take } from 'rxjs';
+import { StaffSortBy } from '../models/staff.sort.by';
+import { StaffSortOrder } from '../models/staff.sort.order';
+import { StaffSortStatus } from '../models/staff.sort.status';
 
 @Service()
 export class StaffService {
@@ -15,12 +18,22 @@ export class StaffService {
 
     isLoadingMore = signal<boolean>(false)
 
+    selectedSortBy = signal<StaffSortBy['value']>('CreatedAt')
+    selectedSortOrder = signal<StaffSortOrder['value']>('DESC')
+    selectedStatus = signal<StaffSortStatus['value']>('Active')
+
     url: string = `${environment.apiUrl}/staffs`
 
-    baseParams = new HttpParams().set('pagesize', 2)
+    baseParams = new HttpParams().set('pagesize', 20)
 
     staffListResource = httpResource<PagedResult<StaffListItem>>(() => {
         const currentCursor = this.cursor()
+
+        const currentSortBy = this.selectedSortBy()
+
+        const currentSortOrder = this.selectedSortOrder()
+
+        const currentStatus = this.selectedStatus()
 
         const currentSearch = this.debouncedSearch.value()
 
@@ -29,6 +42,10 @@ export class StaffService {
         if (currentCursor !== null) params = params.set('cursor', currentCursor)
 
         if (currentSearch.trim() !== '') params = params.set('search', currentSearch)
+
+        params = params.set('sortBy', currentSortBy)
+        params = params.set('sortOrder', currentSortOrder)
+        params = params.set('status', currentStatus)
 
         return {
             url: this.url,
@@ -77,6 +94,14 @@ export class StaffService {
         } finally {
             this.isLoadingMore.set(false)
         }
+    }
+
+    changeSortBy = (sortBy: StaffSortBy['value'], sortOrder: StaffSortOrder['value']) => {
+        this.selectedSortBy.set(sortBy)
+
+        this.selectedSortOrder.set(sortBy === 'CreatedAt' ? 'DESC' : 'ASC')
+
+        this.cursor.set(null)
     }
 
     searchStaff = (text: string) => {

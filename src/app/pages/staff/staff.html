@@ -7,19 +7,60 @@
 
     <mat-card>
         <mat-card-content>
-            <div class="flex flex-1 min-w-0 items-center justify-between gap-4 mb-8">
+            <div class="flex flex-1 min-w-0 items-center justify-between gap-4 mb-4">
 
-                <mat-form-field subscriptSizing="dynamic" class="w-full">
+                <mat-form-field subscriptSizing="dynamic" class="w-full rounded-2xl">
                     <mat-icon matIconPrefix>search</mat-icon>
                     <mat-label>Pesquisar colaboradores</mat-label>
                     <input matInput type="search" #searchInput (input)="staffService.searchStaff(searchInput.value)">
                 </mat-form-field>
 
 
-                <button matFab extended>
+                <button mat-flat-button extended>
                     <mat-icon>person_add</mat-icon>
                     Adicionar
                 </button>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="flex gap-2 items-center mt-6 mb-3">
+                <mat-icon matPrefix>tune</mat-icon>
+                <p class="text-x1 font-bold tracking-wider">Filtros</p>
+            </div>
+            <div class="staff-filters flex flex-wrap items-center gap-4 mb-6">
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-icon matIconPrefix>{{sortByIcon()}}</mat-icon>
+                    <mat-label>Ordenar por</mat-label>
+                    <mat-select [value]="staffService.selectedSortBy()"
+                        (selectionChange)="staffService.changeSortBy($event.value, $event.value)">
+                        @for(option of staffSortBy; track option.value){
+                        <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-icon matIconPrefix>{{sortOrderIcon()}}</mat-icon>
+                    <mat-label>Em ordem</mat-label>
+                    <mat-select [value]="staffService.selectedSortOrder()"
+                        (selectionChange)="staffService.selectedSortOrder.set($event.value)">
+                        @for(option of sortOrderOptions(); track option.value){
+                        <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-icon matIconPrefix>filter_alt</mat-icon>
+                    <mat-label>Status</mat-label>
+                    <mat-select [value]="staffService.selectedStatus()"
+                        (selectionChange)="staffService.selectedStatus.set($event.value)">
+                        @for(option of staffSortStatus; track option.value){
+                        <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
             </div>
 
             <table mat-table [dataSource]="tableData()" class="mat-shadow-2 w-full">
@@ -41,6 +82,9 @@
                         }
                         @case ('email') {
                         {{element.email}}
+                        }
+                        @case('roles'){
+                        {{element.roles}}
                         }
                         @case ('status') {
                         @if(element.status === 'Active'){
@@ -96,7 +140,7 @@
 
             @if(hasMore() && !isLoadingSearch()){
             <div class="flex items-center justify-center w-full">
-                <button matFab extended (click)="staffService.loadNextPage()">
+                <button mat-flat-button (click)="staffService.loadNextPage()">
                     <mat-icon>sync</mat-icon>
                     Carregar mais
                 </button>

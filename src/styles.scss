@@ -22,7 +22,8 @@ html {
                 brand-family: Open Sans,
                 bold-weight: 700,
                 medium-weight: 500,
-                regular-weight: 400)));
+                regular-weight: 400),
+        ));
 }
 
 html.dark {
@@ -112,6 +113,13 @@ html.dark {
 .status-inactive {
     background-color: var(--mat-sys-error-container);
     color: var(--mat-sys-on-error-container);
+}
+
+.staff-filters {
+    @include mat.theme((density: -1,
+        ));
+
+    @include mat.form-field-overrides((filled-container-color: transparent));
 }
 
 body {
