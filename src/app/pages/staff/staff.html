@@ -63,70 +63,95 @@
                 </mat-form-field>
             </div>
 
-            <table mat-table [dataSource]="tableData()" class="mat-shadow-2 w-full">
+            <div class="grid mt-16">
+                @if(isInitialLoading()){
+                @for(row of skeletonRows; track $index){
+                <div class="grid grid-cols-[2fr_1fr_1fr_1fr] p-2">
+                    <div class="flex gap-2 items-center">
+                        <span
+                            class="flex items-center justify-center size-12 rounded-full animate-pulse bg-gray-300"></span>
 
-                @for(column of columns; track column.key){
-                <ng-container [matColumnDef]="column.key">
-                    <th mat-header-cell *matHeaderCellDef [class]="column.headerClass">{{column.label}}</th>
-                    <td mat-cell *matCellDef="let element" [class]="column.cellClass">
-                        @if(isInitialLoading()){
-                        <div [class]="column.skeletonWidth + ' ' + column.skeletonClass"
-                            class="h-4 animate-pulse rounded bg-gray-300"></div>
-                        } @else {
-                        @switch (column.key) {
-                        @case ('id') {
-                        {{element.id}}
-                        }
-                        @case ('fullName') {
-                        {{element.fullName}}
-                        }
-                        @case ('email') {
-                        {{element.email}}
-                        }
-                        @case('roles'){
-                        {{element.roles}}
-                        }
-                        @case ('status') {
-                        @if(element.status === 'Active'){
+                        <div class="flex flex-col gap-1">
+                            <span class="w-64 h-3 rounded animate-pulse bg-gray-300"></span>
+                            <span class="w-48 h-3 rounded animate-pulse bg-gray-300"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        <span class="w-32 h-4 rounded animate-pulse bg-gray-300"></span>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        <span class="w-24 h-6 rounded-xl animate-pulse bg-gray-300"></span>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        <span class="size-8 rounded-full animate-pulse bg-gray-300"></span>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+                }
+
+                } @else {
+                @for(item of listItems(); track item.id){
+                <div class="grid grid-cols-[2fr_1fr_1fr_1fr] p-2 hover:bg-[var(--mat-sys-surface-container-high)]">
+                    <div class="flex gap-2 items-center">
+                        <span
+                            class="flex items-center justify-center size-12 rounded-full text-[var(--mat-sys-on-primary)] shrink-0 bg-[var(--mat-sys-primary)]">
+                            <mat-icon>person</mat-icon>
+                        </span>
+
+                        <div class="flex flex-col">
+                            <span class="font-semibold">{{item.fullName}}</span>
+                            <span class="text-sm text-gray-500 font-medium">{{item.email}}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        <span>{{item.roles}}</span>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        @if(item.status === 'Active'){
                         <span
                             class="status-active inline-flex items-center self-center justify-center py-1 w-20 rounded-3xl font-medium">Ativo</span>
                         } @else {
                         <span
                             class="status-inactive inline-flex items-center self-center justify-center py-1 w-20 rounded-3xl font-medium">Inativo</span>
                         }
-                        }
-                        @case ('actions') {
-                        <button mat-icon-button class="view-action">
-                            <mat-icon>visibility</mat-icon>
+                    </div>
+
+                    <div class="flex flex-row items-center">
+                        <button matIconButton [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
                         </button>
 
-                        <button mat-icon-button class="edit-action">
-                            <mat-icon>edit</mat-icon>
-                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>
+                                <mat-icon>info</mat-icon>
+                                <span>Detalhes</span>
+                            </button>
 
-                        <button mat-icon-button class="deactivate-action">
-                            <mat-icon>block</mat-icon>
-                        </button>
-                        }
-                        }
-                        }
-                    </td>
-                </ng-container>
+                            <button mat-menu-item>
+                                <mat-icon>edit_square</mat-icon>
+                                <span>Editar</span>
+                            </button>
+
+                            <button mat-menu-item>
+                                <mat-icon>sync_alt</mat-icon>
+                                <span>Gerenciar Status</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+
+                </div>
+
+                <mat-divider></mat-divider>
+                }
                 }
 
-                <tr class="mat-row" *matNoDataRow [class.hidden]="hideEmptyState()">
-                    <td class="mat-cell py-10 text-center text-gray-500" [attr.colspan]="displayedColumns().length">
-                        <div class="flex items-center justify-center mt-8">
-                            <mat-icon matIconPrefix>search_off</mat-icon>
-                            <p>Nenhum resultado encontrado</p>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
-
-            </table>
+            </div>
 
             @if(isLoadingSearch() && !isSearching() || staffService.isLoadingMore()){
             <div class="flex items-center">

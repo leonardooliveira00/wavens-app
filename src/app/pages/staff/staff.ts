@@ -10,15 +10,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { StaffTableColumn } from '../../features/staff/models/staff.table.column';
 import { StaffSortBy } from '../../features/staff/models/staff.sort.by';
 import { StaffSortOrder } from '../../features/staff/models/staff.sort.order';
 import { StaffSortStatus } from '../../features/staff/models/staff.sort.status';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDivider } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
-  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule, MatSelectModule, MatDivider],
+  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule, MatSelectModule, MatDivider, MatMenuModule],
   providers: [StaffService],
   selector: 'app-staff',
   styleUrl: './staff.css',
@@ -122,29 +122,5 @@ export class Staff {
     )?.icon ?? 'sort'
   )
 
-  columns: StaffTableColumn[] = [
-    { key: 'id', label: 'UUID', skeletonWidth: 'w-32', skeletonClass: '', headerClass: '', cellClass: '' },
-    { key: 'fullName', label: 'Nome', skeletonWidth: 'w-40', skeletonClass: '', headerClass: '', cellClass: '' },
-    { key: 'email', label: 'Email', skeletonWidth: 'w-48', skeletonClass: '', headerClass: '', cellClass: '' },
-    { key: 'roles', label: 'Cargo', skeletonWidth: 'w-20', skeletonClass: '', headerClass: '', cellClass: '' },
-    { key: 'status', label: 'Status', skeletonWidth: 'w-20', skeletonClass: 'mx-auto', headerClass: 'text-center', cellClass: 'text-center' },
-    { key: 'actions', label: 'Ações', skeletonWidth: 'w-24', skeletonClass: 'mx-auto', headerClass: 'text-center', cellClass: 'text-center' }
-  ]
-
-  displayedColumns = computed(() =>
-    this.columns.map(column => column.key))
-
-  skeletonRows: StaffListItem[] = Array.from(
-    { length: 6 },
-    () => ({
-      id: '',
-      fullName: '',
-      email: '',
-      role: '',
-      status: '',
-      actions: ''
-    })
-  )
-
-  tableData = computed(() => this.isInitialLoading() ? this.skeletonRows : this.listItems())
+  skeletonRows: StaffListItem[] = Array.from({ length: 10 })
 }
