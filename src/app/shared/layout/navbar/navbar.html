@@ -6,8 +6,8 @@
     <div class="flex-1 mt-4">
         <mat-nav-list role="navigation">
             @for (item of navigationItems; track item.route) {
-            <mat-list-item [routerLink]="item.route" routerLinkActive [routerLinkActiveOptions]="{exact: true}"
-                #rla="routerLinkActive" [activated]="rla.isActive">
+            <mat-list-item [routerLink]="item.route" routerLinkActive #rla="routerLinkActive"
+                [activated]="rla.isActive">
                 <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
                 <span matListItemTitle>{{ item.label }}</span>
             </mat-list-item>

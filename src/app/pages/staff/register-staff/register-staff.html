@@ -1,0 +1,110 @@
+<div class="flex flex-col gap-6 p-6">
+    <header class="flex flex-col gap-2">
+        <h1 class="text-2xl font-bold">Adicionar colaborador</h1>
+        <p class="text-sm text-gray-500">Preencha os dados para adicionar um novo colaborador à equipe.</p>
+    </header>
+
+    <mat-card class="w-full max-w-3xl mx-auto p-2">
+        <mat-card-content>
+            <form [formRoot]="staffRegistrationForm" appResetTouchedOnInput class="staff-registration">
+                <div class="flex flex-col gap-1 mb-4">
+                    <div class="flex flex-row gap-1 items-center">
+                        <mat-icon class="material-symbols-outlined">person_add</mat-icon>
+                        <h2 class="text-lg font-semibold">Novo Colaborador</h2>
+                    </div>
+                    <p class="text-sm font-light">Cadastre um novo membro da equipe.</p>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-3 mt-10">
+                        <mat-form-field class="flex-1">
+                            <mat-label>Nome</mat-label>
+                            <input matInput [formField]="staffRegistrationForm.firstName">
+
+                            @for(error of staffRegistrationForm.firstName().errors(); track error.kind){
+                            <mat-error>{{error.message}}</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field class="flex-1">
+                            <mat-label>Sobrenome</mat-label>
+                            <input matInput [formField]="staffRegistrationForm.lastName">
+
+                            @for(error of staffRegistrationForm.lastName().errors(); track error.kind){
+                            <mat-error>{{error.message}}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <mat-form-field
+                            [class.success]="staffRegistrationForm.email().valid() && !staffRegistrationForm.email().pending()">
+                            <mat-label>Email</mat-label>
+                            <input matInput [formField]="staffRegistrationForm.email">
+
+                            @if(staffRegistrationForm.email().pending()){
+                            <div matSuffix class="flex items-center" class="!mx-3">
+                                <mat-spinner diameter="20" />
+                            </div>
+                            }
+
+                            @if(staffRegistrationForm.email().valid() &&
+                            !staffRegistrationForm.email().pending()){
+                            <mat-icon matSuffix class="success material-symbols-filled">check_circle</mat-icon>
+                            } @else if(staffRegistrationForm.email().errors().some(error => error.kind ===
+                            'emailAlreadyInUse') &&
+                            !staffRegistrationForm.email().pending()){
+                            <mat-icon matSuffix class="material-symbols-filled">x_circle</mat-icon>
+                            }
+
+                            @for(error of staffRegistrationForm.email().errors(); track error.kind){
+                            <mat-error>{{error.message}}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field
+                            [class.success]="staffRegistrationForm.contactPhone().valid() && !staffRegistrationForm.contactPhone().pending()"
+                            class="w-1/2">
+                            <mat-label>Telefone</mat-label>
+                            <input matInput [formField]="staffRegistrationForm.contactPhone">
+
+                            @if(staffRegistrationForm.contactPhone().pending()){
+                            <div matSuffix class="flex items-center" class="!mx-3">
+                                <mat-spinner diameter="20" />
+                            </div>
+                            }
+
+                            @if(staffRegistrationForm.contactPhone().valid() &&
+                            !staffRegistrationForm.contactPhone().pending()){
+                            <mat-icon matSuffix class="success material-symbols-filled">check_circle</mat-icon>
+                            } @else if(staffRegistrationForm.contactPhone().errors().some(error => error.kind ===
+                            'phoneAlreadyInUse') &&
+                            !staffRegistrationForm.contactPhone().pending()){
+                            <mat-icon matSuffix class="material-symbols-filled">x_circle</mat-icon>
+                            }
+
+                            @for(error of staffRegistrationForm.contactPhone().errors(); track error.kind){
+                            <mat-error>{{error.message}}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button mat-flat-button class="mt-4" [disabled]="staffRegistrationForm().submitting()">
+                            @if(staffRegistrationForm().submitting()){
+                            <mat-spinner diameter="20"></mat-spinner>
+                            } @else {
+                            Adicionar
+                            }
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

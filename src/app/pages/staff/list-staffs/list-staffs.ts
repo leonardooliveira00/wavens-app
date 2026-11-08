@@ -1,30 +1,30 @@
-import { Component, computed, inject, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { StaffService } from '../../features/staff/services/staff.service';
-import { StaffListItem } from '../../features/staff/models/staff.list.item';
+import { StaffService } from '../../../features/staff/services/staff.service';
+import { StaffListItem } from '../../../features/staff/models/staff.list.item';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { StaffSortBy } from '../../features/staff/models/staff.sort.by';
-import { StaffSortOrder } from '../../features/staff/models/staff.sort.order';
-import { StaffSortStatus } from '../../features/staff/models/staff.sort.status';
+import { StaffSortBy } from '../../../features/staff/models/staff.sort.by';
+import { StaffSortOrder } from '../../../features/staff/models/staff.sort.order';
+import { StaffSortStatus } from '../../../features/staff/models/staff.sort.status';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule, MatSelectModule, MatDivider, MatMenuModule],
+  imports: [MatButtonModule, MatCardModule, MatIcon, MatTableModule, MatProgressBar, MatFormFieldModule, MatInputModule, FormsModule, MatProgressSpinnerModule, MatSelectModule, MatDivider, MatMenuModule, RouterLink],
   providers: [StaffService],
   selector: 'app-staff',
-  styleUrl: './staff.css',
-  templateUrl: './staff.html',
+  templateUrl: './list-staffs.html',
 })
-export class Staff {
+export class ListStaffs {
   staffService = inject(StaffService)
 
   source = computed<{ items: StaffListItem[]; search: string, sortBy: string, sortOrder: string, status: string }>(() => ({

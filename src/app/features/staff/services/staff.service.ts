@@ -1,5 +1,5 @@
-import { HttpParams, httpResource } from '@angular/common/http';
-import { debounced, Service, signal } from '@angular/core';
+import { HttpClient, HttpParams, httpResource } from '@angular/common/http';
+import { debounced, inject, Service, signal } from '@angular/core';
 import { PagedResult } from '../../../shared/paged.result';
 import { StaffListItem } from '../models/staff.list.item';
 import { environment } from '../../../../environments/environment.development';
@@ -8,9 +8,12 @@ import { filter, firstValueFrom, map, take } from 'rxjs';
 import { StaffSortBy } from '../models/staff.sort.by';
 import { StaffSortOrder } from '../models/staff.sort.order';
 import { StaffSortStatus } from '../models/staff.sort.status';
+import { RegisterStaffData } from '../models/register-staff-data';
 
 @Service()
 export class StaffService {
+    private http = inject(HttpClient)
+
     cursor = signal<string | null>(null)
 
     search = signal<string>('')
@@ -96,7 +99,7 @@ export class StaffService {
         }
     }
 
-    changeSortBy = (sortBy: StaffSortBy['value'], sortOrder: StaffSortOrder['value']) => {
+    changeSortBy = (sortBy: StaffSortBy['value']) => {
         this.selectedSortBy.set(sortBy)
 
         this.selectedSortOrder.set(sortBy === 'CreatedAt' ? 'DESC' : 'ASC')
@@ -108,5 +111,13 @@ export class StaffService {
         this.search.set(text)
 
         this.cursor.set(null)
+    }
+
+    registerStaff = (data: RegisterStaffData) => {
+        return (firstValueFrom(this.http.post(
+            this.url,
+            data,
+            { credentials: 'include' }
+        )))
     }
 }

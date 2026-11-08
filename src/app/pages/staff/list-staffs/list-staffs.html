@@ -16,7 +16,7 @@
                 </mat-form-field>
 
 
-                <button mat-flat-button extended>
+                <button mat-flat-button routerLink="/staff/new">
                     <mat-icon>person_add</mat-icon>
                     Adicionar
                 </button>
@@ -33,7 +33,7 @@
                     <mat-icon matIconPrefix>{{sortByIcon()}}</mat-icon>
                     <mat-label>Ordenar por</mat-label>
                     <mat-select [value]="staffService.selectedSortBy()"
-                        (selectionChange)="staffService.changeSortBy($event.value, $event.value)">
+                        (selectionChange)="staffService.changeSortBy($event.value)">
                         @for(option of staffSortBy; track option.value){
                         <mat-option [value]="option.value">{{option.viewValue}}</mat-option>
                         }

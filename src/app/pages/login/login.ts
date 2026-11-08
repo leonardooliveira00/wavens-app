@@ -21,6 +21,7 @@ export class Login {
 
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+
   loginModel = signal({
     email: '',
     password: ''

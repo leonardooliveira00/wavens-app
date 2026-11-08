@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { MainLayout } from './shared/layout/main-layout/main-layout';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
-import { Staff } from './pages/staff/staff';
+import { ListStaffs } from './pages/staff/list-staffs/list-staffs';
+import { RegisterStaff } from './pages/staff/register-staff/register-staff';
 import { NotFound } from './pages/not-found/not-found';
 import { authGuard } from './core/guards/auth-guard';
 
@@ -27,7 +28,16 @@ export const routes: Routes = [
         children: [
             {
                 path: 'staff',
-                component: Staff
+                children: [
+                    {
+                        path: '',
+                        component: ListStaffs
+                    },
+                    {
+                        path: 'new',
+                        component: RegisterStaff
+                    }
+                ]
             },
             {
                 path: 'dashboard',
