@@ -8,6 +8,8 @@ services:
 
     container_name: wavens-app
 
+    restart: unless-stopped
+
     ports:
       - '4200:4200'
 

@@ -72,45 +72,9 @@ html.dark {
 }
 
 :root {
-    @include mat.card-overrides((elevated-container-color: var(--mat-sys-surface-container),
+    @include mat.card-overrides((elevated-container-color: var(--mat-sys-surface-container-low),
             elevated-container-elevation: 0px,
         ));
-}
-
-.mat-mdc-header-cell {
-    background: var(--mat-sys-primary) !important;
-    color: var(--mat-sys-on-primary);
-}
-
-.mat-mdc-header-cell.text-center {
-    text-align: center;
-}
-
-.mdc-data-table__cell.text-center {
-    text-align: center;
-}
-
-.mat-mdc-row .mat-mdc-cell {
-    border-bottom: 1px solid var(--mat-sys-surface-container-highest);
-}
-
-.mat-mdc-row:hover {
-    background-color: var(--mat-sys-surface-container-highest);
-}
-
-.view-action:hover {
-    background-color: #e0f2fe;
-    color: #0369a1;
-}
-
-.edit-action:hover {
-    background-color: #e7fff3;
-    color: #4e9f84;
-}
-
-.deactivate-action:hover {
-    background-color: #ffdad6;
-    color: #ff5449;
 }
 
 .status-active {
@@ -139,6 +103,7 @@ html.dark {
     @include mat.icon-overrides((color: var(--mat-sys-tertiary)));
 
     @include mat.form-field-overrides((filled-active-indicator-color: var(--mat-sys-tertiary),
+            filled-hover-active-indicator-color: var(--mat-sys-tertiary),
             filled-focus-active-indicator-color: var(--mat-sys-tertiary)));
 }
 

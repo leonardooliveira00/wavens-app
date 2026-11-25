@@ -17,80 +17,73 @@
 
                 <mat-divider></mat-divider>
 
+                <div class="flex gap-1 items-center mt-6">
+                    <mat-icon matIconPrefix>id_card</mat-icon>
+                    <h2 class="text-md font-semibold">Informações pessoais</h2>
+                </div>
+
                 <div class="flex flex-col gap-2">
-                    <div class="flex gap-3 mt-10">
-                        <mat-form-field class="flex-1">
-                            <mat-label>Nome</mat-label>
-                            <input matInput [formField]="staffRegistrationForm.firstName">
 
-                            @for(error of staffRegistrationForm.firstName().errors(); track error.kind){
-                            <mat-error>{{error.message}}</mat-error>
+                    <div class="grid grid-cols-2 gap-3 mt-4">
+                        @for (field of fields; track field.key) {
+                        <mat-form-field subscriptSizing="dynamic" [class.col-span-2]="field.span === 2" class="w-full"
+                            [class.success]="field.hasAvailabilityCheck &&
+                                        staffRegistrationForm[field.key]().valid() &&
+                                        !staffRegistrationForm[field.key]().pending()">
+                            <mat-label>{{field.label}}</mat-label>
+
+                            @switch(field.key){
+                            @case('birthDate'){
+                            <input matInput [matDatepicker]="picker" [min]="minDate" [max]="today" appDateMask
+                                [formField]="staffRegistrationForm[field.key]"
+                                (valueChange)="birthDateInput.set($event)">
                             }
-                        </mat-form-field>
-
-                        <mat-form-field class="flex-1">
-                            <mat-label>Sobrenome</mat-label>
-                            <input matInput [formField]="staffRegistrationForm.lastName">
-
-                            @for(error of staffRegistrationForm.lastName().errors(); track error.kind){
-                            <mat-error>{{error.message}}</mat-error>
+                            @default {
+                            <input matInput [placeholder]="field.placeholder"
+                                [formField]="staffRegistrationForm[field.key]">
                             }
-                        </mat-form-field>
-                    </div>
+                            }
 
-                    <div class="flex flex-col">
-                        <mat-form-field
-                            [class.success]="staffRegistrationForm.email().valid() && !staffRegistrationForm.email().pending()">
-                            <mat-label>Email</mat-label>
-                            <input matInput [formField]="staffRegistrationForm.email">
+                            @if (field.key === 'birthDate') {
+                            <mat-hint>DD/MM/AAAA</mat-hint>
+                            }
 
-                            @if(staffRegistrationForm.email().pending()){
-                            <div matSuffix class="flex items-center" class="!mx-3">
+                            @if (field.key === 'birthDate') {
+                            <mat-datepicker-toggle matIconSuffix [for]="picker" />
+                            }
+
+                            <mat-datepicker #picker />
+
+                            @if(field.hasAvailabilityCheck && staffRegistrationForm[field.key]().pending()){
+                            <div matSuffix class="flex items-center !mx-3">
                                 <mat-spinner diameter="20" />
                             </div>
                             }
 
-                            @if(staffRegistrationForm.email().valid() &&
-                            !staffRegistrationForm.email().pending()){
+                            @if(field.hasAvailabilityCheck &&
+                            staffRegistrationForm[field.key]().valid() &&
+                            !staffRegistrationForm[field.key]().pending()){
                             <mat-icon matSuffix class="success material-symbols-filled">check_circle</mat-icon>
-                            } @else if(staffRegistrationForm.email().errors().some(error => error.kind ===
-                            'emailAlreadyInUse') &&
-                            !staffRegistrationForm.email().pending()){
+
+                            } @else if(staffRegistrationForm[field.key]().errors().some(error =>
+                            ['emailAlreadyInUse', 'phoneAlreadyInUse'].includes(error.kind)) &&
+                            !staffRegistrationForm[field.key]().pending()){
                             <mat-icon matSuffix class="material-symbols-filled">x_circle</mat-icon>
                             }
 
-                            @for(error of staffRegistrationForm.email().errors(); track error.kind){
-                            <mat-error>{{error.message}}</mat-error>
+                            @for (
+                            error of staffRegistrationForm[field.key]().errors().filter(error => error.message);
+                            track error.kind
+                            ) {
+                            <mat-error>{{ error.message }}</mat-error>
                             }
                         </mat-form-field>
+                        }
                     </div>
 
-                    <div class="flex">
-                        <mat-form-field
-                            [class.success]="staffRegistrationForm.contactPhone().valid() && !staffRegistrationForm.contactPhone().pending()"
-                            class="w-1/2">
-                            <mat-label>Telefone</mat-label>
-                            <input matInput [formField]="staffRegistrationForm.contactPhone">
-
-                            @if(staffRegistrationForm.contactPhone().pending()){
-                            <div matSuffix class="flex items-center" class="!mx-3">
-                                <mat-spinner diameter="20" />
-                            </div>
-                            }
-
-                            @if(staffRegistrationForm.contactPhone().valid() &&
-                            !staffRegistrationForm.contactPhone().pending()){
-                            <mat-icon matSuffix class="success material-symbols-filled">check_circle</mat-icon>
-                            } @else if(staffRegistrationForm.contactPhone().errors().some(error => error.kind ===
-                            'phoneAlreadyInUse') &&
-                            !staffRegistrationForm.contactPhone().pending()){
-                            <mat-icon matSuffix class="material-symbols-filled">x_circle</mat-icon>
-                            }
-
-                            @for(error of staffRegistrationForm.contactPhone().errors(); track error.kind){
-                            <mat-error>{{error.message}}</mat-error>
-                            }
-                        </mat-form-field>
+                    <div class="flex gap-1 items-center mt-6">
+                        <mat-icon matIconPrefix>location_on</mat-icon>
+                        <h2 class="text-md font-semibold">Endereço</h2>
                     </div>
 
                     <div class="flex justify-end">
